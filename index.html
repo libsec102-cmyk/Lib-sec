@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechShop | Premium Tech Store</title>
+<style>
+:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.14);--text:#f0f0f8;--text2:#a0a0b8;--accent:#6c63ff;--accent2:#8b83ff;--accent3:#4f46e5;--green:#22c55e;--red:#ef4444;--yellow:#f59e0b;--card:#13131e;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.6;}
+
+/* ANNOUNCEMENT */
+.ann-bar{background:linear-gradient(90deg,var(--accent3),var(--accent));padding:8px 20px;text-align:center;font-size:13px;font-weight:500;}
+.ann-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:3px 14px 3px 6px;}
+.ann-tag{background:rgba(255,255,255,.2);border-radius:999px;padding:2px 10px;font-size:11px;font-weight:700;}
+
+/* NAVBAR */
+.navbar{position:sticky;top:0;z-index:100;background:rgba(10,10,15,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:center;height:64px;gap:20px;}
+.logo{font-size:20px;font-weight:800;letter-spacing:-.03em;background:linear-gradient(135deg,var(--accent2),#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;}
+.nav-links{display:flex;gap:4px;list-style:none;flex:1;justify-content:center;}
+.nav-links a{color:var(--text2);text-decoration:none;padding:6px 14px;border-radius:8px;font-size:14px;transition:all .2s;}
+.nav-links a:hover{color:var(--text);background:var(--bg3);}
+.sw{position:relative;width:260px;}
+.si{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:8px 36px 8px 14px;font-size:13px;color:var(--text);outline:none;transition:all .2s;}
+.si::placeholder{color:var(--text2);}.si:focus{border-color:var(--accent);background:var(--bg2);}
+.sico{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:15px;pointer-events:none;}
+.sr{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;overflow:hidden;display:none;z-index:200;box-shadow:0 8px 32px rgba(0,0,0,.6);}
+.sw:focus-within .sr{display:block;}
+.sri{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .15s;font-size:13px;}.sri:hover{background:var(--bg3);}
+.srico{width:28px;height:28px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.srinfo{flex:1;}.srname{font-size:12px;font-weight:500;}.srcat{font-size:11px;color:var(--text2);}.srprice{font-size:12px;color:var(--accent2);font-weight:600;white-space:nowrap;}
+.srfoot{border-top:1px solid var(--border);padding:8px 14px;display:flex;justify-content:space-between;font-size:11px;color:var(--text2);}
+.nav-actions{display:flex;align-items:center;gap:8px;}
+.nbtn{background:none;border:1px solid var(--border2);border-radius:8px;color:var(--text2);padding:7px 14px;font-size:13px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.nbtn:hover{background:var(--bg3);color:var(--text);}
+.nbtn.p{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}.nbtn.p:hover{background:var(--accent2);}
+.cbadge{background:var(--red);color:#fff;border-radius:999px;font-size:10px;font-weight:700;padding:1px 5px;}
+
+/* ═══════════════════════════════════════
+   HERO — Particle background + TextRewind
+   ═══════════════════════════════════════ */
+.hero{position:relative;min-height:92vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 40px 60px;overflow:hidden;background:#05050d;}
+
+/* particle canvas fills hero */
+#particleCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+
+/* subtle radial overlay so text stays readable */
+.hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(5,5,13,.3) 0%,rgba(5,5,13,.75) 100%);pointer-events:none;}
+
+.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;}
+
+.hero-eye{display:inline-flex;align-items:center;gap:8px;background:rgba(108,99,255,.14);border:1px solid rgba(108,99,255,.35);border-radius:999px;padding:6px 18px;font-size:13px;color:var(--accent2);margin-bottom:32px;animation:fd .8s ease forwards;}
+.hdot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes fd{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fu{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── TextRewind (text-rewind.tsx) ── */
+.trw{margin-bottom:14px;animation:fu .8s .1s ease both;cursor:pointer;user-select:none;}
+.tr{
+  font-size:clamp(56px,10vw,108px);
+  font-weight:900;
+  font-style:italic;
+  letter-spacing:.07em;
+  color:#fff;
+  display:inline-block;
+  line-height:1;
+  text-shadow:
+    8px  8px  0px #07bccc,
+    14px 14px 0px #e601c0,
+    20px 20px 0px #e9019a,
+    26px 26px 0px #f40468,
+    46px 46px 14px rgba(244,4,104,.45);
+  transition:text-shadow .3s ease;
+}
+.tr:hover{text-shadow:none;}
+
+.hero-sub{font-size:clamp(20px,3.5vw,42px);font-weight:700;letter-spacing:-.02em;background:linear-gradient(135deg,#a78bfa,var(--accent2),#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:fu .8s .25s ease both;margin-bottom:20px;}
+.hero p{font-size:17px;color:rgba(240,240,248,.75);max-width:520px;margin:0 auto 36px;animation:fu .8s .4s ease both;line-height:1.7;}
+.hero-btns{display:flex;gap:12px;justify-content:center;animation:fu .8s .55s ease both;flex-wrap:wrap;}
+.btp{background:linear-gradient(135deg,var(--accent),#7c3aed);color:#fff;border:none;border-radius:12px;padding:13px 28px;font-size:15px;font-weight:600;cursor:pointer;transition:all .25s;text-decoration:none;display:inline-flex;align-items:center;gap:8px;}
+.btp:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(108,99,255,.4);}
+.btg{background:rgba(255,255,255,.07);color:var(--text);border:1px solid var(--border2);border-radius:12px;padding:13px 28px;font-size:15px;font-weight:500;cursor:pointer;transition:all .25s;text-decoration:none;display:inline-flex;align-items:center;gap:8px;backdrop-filter:blur(8px);}
+.btg:hover{background:rgba(255,255,255,.12);transform:translateY(-2px);}
+
+/* Avatar trust strip */
+.trust-strip{display:flex;align-items:center;gap:8px;margin-top:44px;animation:fu .8s .7s ease both;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:999px;padding:8px 20px;}
+.avstack{display:flex;}
+.avp{width:28px;height:28px;border-radius:50%;border:2px solid #05050d;margin-right:-8px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;}
+.avp:last-child{margin-right:0;}
+.ttext{font-size:13px;color:var(--text2);padding-left:10px;}.ttext strong{color:var(--text);}
+
+/* STATS */
+.sts{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg2);padding:28px 40px;}
+.sts-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;}
+.stn{font-size:32px;font-weight:800;letter-spacing:-.03em;}
+.stn span{background:linear-gradient(135deg,var(--accent2),#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stl{font-size:13px;color:var(--text2);margin-top:4px;}
+
+/* SECTIONS */
+.sec{padding:80px 40px;max-width:1200px;margin:0 auto;}
+.sec-eye{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:8px;}
+.sec-t{font-size:clamp(24px,3vw,36px);font-weight:700;letter-spacing:-.02em;}
+.sec-s{color:var(--text2);margin-top:10px;font-size:15px;}.sec-hd{margin-bottom:48px;}
+
+/* CATEGORIES */
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;}
+.cc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px 16px;text-align:center;cursor:pointer;transition:all .25s;text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center;gap:10px;}
+.cc:hover{border-color:var(--accent);background:rgba(108,99,255,.07);transform:translateY(-2px);}
+.cicon{font-size:28px;width:56px;height:56px;border-radius:14px;background:var(--bg3);display:flex;align-items:center;justify-content:center;}
+.cname{font-size:13px;font-weight:600;}.ccnt{font-size:11px;color:var(--text2);}
+
+/* LIMELIGHT NAV */
+.fn-wrap{display:flex;justify-content:center;margin-bottom:36px;}
+.fn{display:inline-flex;align-items:center;background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:6px;gap:2px;position:relative;}
+.ft{position:relative;z-index:2;padding:8px 18px;border-radius:10px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .2s;border:none;background:none;white-space:nowrap;}
+.ft.active{color:var(--text);background:var(--bg3);}.ft:hover:not(.active){color:var(--text);}
+.ll{position:absolute;top:0;height:3px;border-radius:999px;background:var(--accent);transition:all .3s cubic-bezier(.4,0,.2,1);box-shadow:0 0 20px rgba(108,99,255,.6),0 8px 30px rgba(108,99,255,.2);}
+
+/* PRODUCTS */
+.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;}
+.pc{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;transition:all .3s;cursor:pointer;position:relative;}
+.pc:hover{border-color:var(--border2);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.4);}
+.pimg{aspect-ratio:1;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:64px;position:relative;overflow:hidden;}
+.pimg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(108,99,255,.07),transparent 70%);}
+.pbadge{position:absolute;top:12px;right:12px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.05em;}
+.bn{background:rgba(34,197,94,.2);color:#4ade80;border:1px solid rgba(34,197,94,.3);}
+.bs{background:rgba(239,68,68,.2);color:#f87171;border:1px solid rgba(239,68,68,.3);}
+.bh{background:rgba(245,158,11,.2);color:#fbbf24;border:1px solid rgba(245,158,11,.3);}
+.pwl{position:absolute;top:12px;left:12px;width:32px;height:32px;border-radius:8px;background:rgba(10,10,15,.7);border:1px solid var(--border2);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;opacity:0;transition:all .2s;color:var(--text2);}
+.pc:hover .pwl{opacity:1;}.pwl:hover{color:var(--red);}
+.pinfo{padding:16px;}
+.pbrand{font-size:11px;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;}
+.pname{font-size:14px;font-weight:600;margin-bottom:8px;line-height:1.4;}
+.prat{display:flex;align-items:center;gap:4px;margin-bottom:10px;}
+.stars{color:var(--yellow);font-size:12px;}.rcnt{font-size:11px;color:var(--text2);}
+.pprice{display:flex;align-items:baseline;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.pcur{font-size:17px;font-weight:700;color:var(--accent2);}
+.pold{font-size:12px;color:var(--text2);text-decoration:line-through;}.psave{font-size:11px;color:var(--green);font-weight:600;}
+.pact{display:flex;gap:8px;}
+.badd{flex:1;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.badd:hover{background:var(--accent2);transform:scale(1.02);}
+.bqv{background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:10px;padding:9px 12px;font-size:13px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.bqv:hover{background:var(--border);color:var(--text);}
+
+/* PRICING */
+.price-sec{background:var(--bg2);padding:80px 40px;}
+.price-inner{max-width:1200px;margin:0 auto;}
+.price-wrap{max-width:680px;margin:0 auto;position:relative;}
+.price-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border2);border-radius:20px;overflow:hidden;}
+.pp{padding:32px 28px;background:var(--card);position:relative;}
+.pp.feat{background:linear-gradient(135deg,rgba(108,99,255,.12),rgba(124,58,237,.08));border-left:1px solid rgba(108,99,255,.35);}
+.pcring{position:absolute;inset:-1px;border-radius:20px;pointer-events:none;border:1px solid rgba(108,99,255,.45);opacity:0;}
+.pp.feat .pcring{opacity:1;}
+.pph{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;}
+.ppn{font-size:17px;font-weight:700;}.ppd{font-size:13px;color:var(--text2);margin-bottom:24px;}
+.ppa{font-size:48px;font-weight:800;letter-spacing:-.04em;}
+.ppper{font-size:14px;color:var(--text2);}.ppold{font-size:12px;color:var(--text2);text-decoration:line-through;}
+.ppbadge{display:inline-flex;align-items:center;background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3);border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;}
+.ppbadge.pur{background:rgba(108,99,255,.15);color:var(--accent2);border-color:rgba(108,99,255,.3);}
+.ppcta{display:block;width:100%;margin-top:24px;padding:12px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;text-align:center;text-decoration:none;transition:all .2s;border:1px solid var(--border2);background:var(--bg3);color:var(--text);}
+.ppcta:hover{background:var(--border);}
+.ppcta.feat{background:var(--accent);border-color:var(--accent);color:#fff;}
+.ppcta.feat:hover{background:var(--accent2);}
+.pcplus{position:absolute;font-size:14px;font-weight:300;color:var(--text2);width:10px;height:10px;display:flex;align-items:center;justify-content:center;}
+.price-gt{text-align:center;margin-top:16px;font-size:12px;color:var(--text2);display:flex;align-items:center;justify-content:center;gap:6px;}
+
+/* FEATURES */
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:20px;overflow:hidden;}
+.fi{background:var(--card);padding:32px 24px;transition:background .2s;}.fi:hover{background:var(--bg3);}
+.ficon{font-size:28px;margin-bottom:16px;}.ftitle{font-size:15px;font-weight:600;margin-bottom:8px;}.fdesc{font-size:13px;color:var(--text2);line-height:1.6;}
+
+/* PAGINATION */
+.pag{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:48px;flex-wrap:wrap;}
+.pb{min-width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;padding:0 8px;}
+.pb:hover{background:var(--bg3);color:var(--text);border-color:var(--border2);}.pb.act{background:var(--accent);border-color:var(--accent);color:#fff;}.pb:disabled{opacity:.35;cursor:not-allowed;}
+.pelp{width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:13px;}
+
+/* FOOTER */
+.fw{border-top:1px solid var(--border);}
+.foot{padding:64px 40px 32px;max-width:1200px;margin:0 auto;}
+.fg2{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px;}
+.fbdesc{font-size:13px;color:var(--text2);line-height:1.7;max-width:240px;margin-top:12px;}
+.fsoc{display:flex;gap:8px;margin-top:20px;}
+.sb{width:36px;height:36px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none;}
+.sb:hover{background:var(--border);color:var(--text);}
+.fct{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);margin-bottom:16px;}
+.fl{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.fl a{font-size:13px;color:var(--text2);text-decoration:none;transition:color .2s;}.fl a:hover{color:var(--text);}
+.fb{border-top:1px solid var(--border);padding-top:24px;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--text2);flex-wrap:wrap;gap:12px;}
+.fbl{display:flex;gap:20px;}.fbl a{color:var(--text2);text-decoration:none;}.fbl a:hover{color:var(--text);}
+
+/* TOAST */
+.tc{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
+.toast{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:12px 16px;font-size:13px;display:flex;align-items:center;gap:10px;min-width:260px;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:su .3s ease;}
+@keyframes su{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.ticon{font-size:18px;flex-shrink:0;}.ttitle{font-weight:600;font-size:13px;}.tsub{font-size:11px;color:var(--text2);margin-top:2px;}
+
+@media(max-width:768px){
+.navbar{padding:0 16px;gap:10px;}.nav-links{display:none;}.sw{width:180px;}
+.sec{padding:60px 16px;}.sts-inner{grid-template-columns:1fr 1fr;}
+.price-grid{grid-template-columns:1fr;}.pp.feat{border-left:none;border-top:1px solid rgba(108,99,255,.35);}
+.fg2{grid-template-columns:1fr 1fr;}.hero{padding:60px 20px 40px;}
+.tr{font-size:clamp(38px,12vw,64px);}}
+</style>
+</head>
+<body>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="ann-bar">
+  <span class="ann-badge">
+    <span class="ann-tag">New</span>
+    Free shipping on all orders over $49 &nbsp;&rarr;
+  </span>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo">&#9889; TechShop</div>
+  <ul class="nav-links">
+    <li><a href="#products">Products</a></li>
+    <li><a href="#categories">Categories</a></li>
+    <li><a href="#pricing">Membership</a></li>
+    <li><a href="#features">Services</a></li>
+    <li><a href="#footer">Contact</a></li>
+  </ul>
+  <div class="sw">
+    <input class="si" type="text" placeholder="Search products..." id="searchInput" autocomplete="off">
+    <span class="sico" id="searchIcon">&#128269;</span>
+    <div class="sr">
+      <div class="sri" onclick="addToCart('MacBook Pro M3')"><div class="srico">&#128187;</div><div class="srinfo"><div class="srname">MacBook Pro M3</div><div class="srcat">Laptops</div></div><span class="srprice">$1,299</span></div>
+      <div class="sri" onclick="addToCart('iPhone 15 Pro')"><div class="srico">&#128241;</div><div class="srinfo"><div class="srname">iPhone 15 Pro</div><div class="srcat">Smartphones</div></div><span class="srprice">$999</span></div>
+      <div class="sri" onclick="addToCart('Sony WH-1000XM5')"><div class="srico">&#127911;</div><div class="srinfo"><div class="srname">Sony WH-1000XM5</div><div class="srcat">Headphones</div></div><span class="srprice">$349</span></div>
+      <div class="sri" onclick="addToCart('ASUS ROG 4K')"><div class="srico">&#128187;</div><div class="srinfo"><div class="srname">ASUS ROG 4K 240Hz</div><div class="srcat">Monitors</div></div><span class="srprice">$579</span></div>
+      <div class="srfoot"><span>&#8984;K to open commands</span><span>ESC to cancel</span></div>
+    </div>
+  </div>
+  <div class="nav-actions">
+    <button class="nbtn" onclick="showToast('&#10084;&#65039;','Wishlist','5 items saved')">&#10084;&#65039;</button>
+    <button class="nbtn" onclick="showToast('&#128722;','Cart',cartCount+' item(s) in your cart')">&#128722; Cart <span class="cbadge" id="cartBadge">0</span></button>
+    <button class="nbtn p" onclick="showToast('&#128100;','Sign In','Redirecting...')">Sign In</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HERO — Particle Canvas + TextRewind (text-rewind.tsx)
+     ═══════════════════════════════════════════ -->
+<section class="hero">
+  <canvas id="particleCanvas"></canvas>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <div class="hero-eye"><div class="hdot"></div>Trusted by 60,000+ customers worldwide</div>
+
+    <!-- TextRewind component -->
+    <div class="trw" title="Hover to clear shadow">
+      <span class="tr" id="rewindText">TECHSHOP</span>
+    </div>
+
+    <div class="hero-sub">The Future of Tech, Delivered</div>
+    <p>Premium technology products with authenticity guarantee, fast shipping, and 24/7 support — all in one place.</p>
+    <div class="hero-btns">
+      <a href="#products" class="btp">Browse Products &rarr;</a>
+      <a href="#categories" class="btg">View Categories</a>
+    </div>
+
+    <!-- Avatar trust strip (avatar.tsx) -->
+    <div class="trust-strip">
+      <div class="avstack">
+        <div class="avp" style="background:linear-gradient(135deg,#6c63ff,#8b83ff)">AM</div>
+        <div class="avp" style="background:linear-gradient(135deg,#7c3aed,#c084fc)">SR</div>
+        <div class="avp" style="background:linear-gradient(135deg,#059669,#34d399)">KH</div>
+        <div class="avp" style="background:linear-gradient(135deg,#dc2626,#f87171)">JL</div>
+      </div>
+      <span class="ttext">Trusted by <strong>60K+</strong> happy customers</span>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="sts">
+  <div class="sts-inner">
+    <div><div class="stn"><span>60K+</span></div><div class="stl">Active customers</div></div>
+    <div><div class="stn"><span>2,500+</span></div><div class="stl">Authentic products</div></div>
+    <div><div class="stn"><span>4.9&#9733;</span></div><div class="stl">Average rating</div></div>
+    <div><div class="stn"><span>24/7</span></div><div class="stl">Live support</div></div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="sec" id="categories">
+  <div class="sec-hd"><div class="sec-eye">Browse by type</div><h2 class="sec-t">Everything you need</h2><p class="sec-s">From smartphones to accessories — all in one place</p></div>
+  <div class="cg">
+    <a class="cc" href="#products" onclick="filterProducts('Smartphones')"><div class="cicon">&#128241;</div><div class="cname">Smartphones</div><div class="ccnt">48 products</div></a>
+    <a class="cc" href="#products" onclick="filterProducts('Laptops')"><div class="cicon">&#128187;</div><div class="cname">Laptops</div><div class="ccnt">32 products</div></a>
+    <a class="cc" href="#products" onclick="filterProducts('Headphones')"><div class="cicon">&#127911;</div><div class="cname">Headphones</div><div class="ccnt">56 products</div></a>
+    <a class="cc" href="#products" onclick="filterProducts('Monitors')"><div class="cicon">&#128187;</div><div class="cname">Monitors</div><div class="ccnt">24 products</div></a>
+    <a class="cc" href="#products" onclick="filterProducts('Tablets')"><div class="cicon">&#128250;</div><div class="cname">Tablets</div><div class="ccnt">19 products</div></a>
+    <a class="cc" href="#products" onclick="filterProducts('Wearables')"><div class="cicon">&#8987;</div><div class="cname">Wearables</div><div class="ccnt">31 products</div></a>
+    <a class="cc" href="#products" onclick="filterProducts('Gaming')"><div class="cicon">&#127918;</div><div class="cname">Gaming</div><div class="ccnt">43 products</div></a>
+    <a class="cc" href="#products" onclick="filterProducts('Cameras')"><div class="cicon">&#128247;</div><div class="cname">Cameras</div><div class="ccnt">27 products</div></a>
+  </div>
+</section>
+
+<!-- PRODUCTS + LIMELIGHT NAV -->
+<section class="sec" id="products" style="padding-top:0">
+  <div class="sec-hd"><div class="sec-eye">Top picks</div><h2 class="sec-t">Best sellers</h2></div>
+  <div class="fn-wrap">
+    <div class="fn" id="filterNav">
+      <div class="ll" id="limelightInd"></div>
+      <button class="ft active" onclick="switchTab(this,'All')">All</button>
+      <button class="ft" onclick="switchTab(this,'Smartphones')">Phones</button>
+      <button class="ft" onclick="switchTab(this,'Laptops')">Laptops</button>
+      <button class="ft" onclick="switchTab(this,'Headphones')">Audio</button>
+      <button class="ft" onclick="switchTab(this,'Monitors')">Displays</button>
+      <button class="ft" onclick="switchTab(this,'Gaming')">Gaming</button>
+    </div>
+  </div>
+  <div class="pg" id="productsGrid"></div>
+  <div class="pag" id="pagination"></div>
+</section>
+
+<!-- FEATURES -->
+<section class="sec" id="features" style="padding-top:20px">
+  <div class="sec-hd" style="text-align:center"><div class="sec-eye">Why TechShop</div><h2 class="sec-t">Built around your trust</h2></div>
+  <div class="fg">
+    <div class="fi"><div class="ficon">&#128666;</div><div class="ftitle">Fast shipping</div><div class="fdesc">Next-day delivery in major cities, 3-5 days nationwide.</div></div>
+    <div class="fi"><div class="ficon">&#128274;</div><div class="ftitle">100% authentic</div><div class="fdesc">Every product ships with official warranty and certificate.</div></div>
+    <div class="fi"><div class="ficon">&#128179;</div><div class="ftitle">Secure payment</div><div class="fdesc">Encrypted checkout. All major cards and BNPL supported.</div></div>
+    <div class="fi"><div class="ficon">&#128260;</div><div class="ftitle">Easy returns</div><div class="fdesc">30-day no-questions-asked return policy on all products.</div></div>
+    <div class="fi"><div class="ficon">&#127911;</div><div class="ftitle">24/7 support</div><div class="fdesc">Chat, email, or call — our team is always here for you.</div></div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<div class="price-sec" id="pricing">
+  <div class="price-inner">
+    <div class="sec-hd" style="text-align:center;margin-bottom:48px"><div class="sec-eye">Membership</div><h2 class="sec-t">Unlock exclusive pricing</h2><p class="sec-s">Members get early access, free shipping, and VIP deals.</p></div>
+    <div class="price-wrap">
+      <div style="position:relative">
+        <span class="pcplus" style="top:-7px;right:-7px">+</span><span class="pcplus" style="top:-7px;left:-7px">+</span>
+        <span class="pcplus" style="bottom:-7px;right:-7px">+</span><span class="pcplus" style="bottom:-7px;left:-7px">+</span>
+        <div class="price-grid">
+          <div class="pp">
+            <div class="pph"><div class="ppn">Monthly</div><div style="display:flex;gap:6px;align-items:center"><span class="ppold">$12.99</span><span class="ppbadge">11% off</span></div></div>
+            <div class="ppd">Great for getting started</div>
+            <div style="margin-bottom:24px"><span style="font-size:18px;vertical-align:top;margin-top:10px;display:inline-block;color:var(--text2)">$</span><span class="ppa">9.99</span><span class="ppper"> /month</span></div>
+            <a class="ppcta" href="#" onclick="showToast('&#128640;','Monthly plan','Redirecting to checkout...')">Get started</a>
+          </div>
+          <div class="pp feat">
+            <div class="pcring"></div>
+            <div class="pph"><div class="ppn">Yearly</div><div style="display:flex;gap:6px;align-items:center"><span class="ppold">$12.99</span><span class="ppbadge pur">22% off</span></div></div>
+            <div class="ppd">Best value for power shoppers</div>
+            <div style="margin-bottom:24px"><span style="font-size:18px;vertical-align:top;margin-top:10px;display:inline-block;color:var(--accent2)">$</span><span class="ppa" style="color:var(--accent2)">7.99</span><span class="ppper"> /month</span></div>
+            <a class="ppcta feat" href="#" onclick="showToast('&#11088;','Yearly plan','Best choice! Redirecting...')">Start saving now</a>
+          </div>
+        </div>
+      </div>
+      <div class="price-gt">&#128737;&#65039; Access to all features with no hidden fees</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer id="footer"><div class="fw"><div class="foot">
+  <div class="fg2">
+    <div>
+      <div class="logo">&#9889; TechShop</div>
+      <p class="fbdesc">Your go-to store for premium tech. Quality, speed, and customer satisfaction since 2014.</p>
+      <div class="fsoc">
+        <a class="sb" href="#">f</a><a class="sb" href="#">ig</a>
+        <a class="sb" href="#">yt</a><a class="sb" href="#">in</a>
+      </div>
+    </div>
+    <div><div class="fct">Products</div><ul class="fl"><li><a href="#">Smartphones</a></li><li><a href="#">Laptops</a></li><li><a href="#">Headphones</a></li><li><a href="#">Accessories</a></li></ul></div>
+    <div><div class="fct">Company</div><ul class="fl"><li><a href="#">About us</a></li><li><a href="#">Contact</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li></ul></div>
+    <div><div class="fct">Support</div><ul class="fl"><li><a href="#">Help center</a></li><li><a href="#">Track order</a></li><li><a href="#">Returns</a></li><li><a href="#">Warranty</a></li></ul></div>
+    <div><div class="fct">Legal</div><ul class="fl"><li><a href="#">Privacy policy</a></li><li><a href="#">Terms</a></li><li><a href="#">Cookies</a></li><li><a href="#">GDPR</a></li></ul></div>
+  </div>
+  <div class="fb"><span>&#169; 2025 TechShop. All rights reserved.</span><div class="fbl"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Sitemap</a></div></div>
+</div></div></footer>
+
+<div class="tc" id="toastContainer"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   PARTICLE SYSTEM — background for TextRewind hero
+   ═══════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('particleCanvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H, particles = [], mouse = {x:-9999, y:-9999};
+
+  const COLORS = ['#6c63ff','#8b83ff','#c084fc','#07bccc','#e601c0','#f40468'];
+  const COUNT  = 110;
+
+  function resize(){
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+
+  function rand(a,b){ return Math.random()*(b-a)+a; }
+
+  class Particle {
+    constructor(){this.reset(true);}
+    reset(init){
+      this.x  = rand(0, W);
+      this.y  = init ? rand(0, H) : rand(-40, -10);
+      this.r  = rand(1.2, 3.2);
+      this.vx = rand(-0.35, 0.35);
+      this.vy = rand(0.18, 0.55);
+      this.color = COLORS[Math.floor(Math.random()*COLORS.length)];
+      this.alpha = rand(0.25, 0.75);
+      this.pulse = rand(0, Math.PI*2);
+      this.pulseSpeed = rand(0.008, 0.022);
+    }
+    update(){
+      this.pulse += this.pulseSpeed;
+      const a = this.alpha * (0.7 + 0.3*Math.sin(this.pulse));
+
+      /* mouse repulsion */
+      const dx = this.x - mouse.x, dy = this.y - mouse.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if(dist < 100){
+        const force = (100-dist)/100;
+        this.x += dx/dist * force * 2.2;
+        this.y += dy/dist * force * 2.2;
+      }
+
+      this.x += this.vx;
+      this.y += this.vy;
+      this._a = a;
+      if(this.y > H+10 || this.x < -10 || this.x > W+10) this.reset(false);
+    }
+    draw(){
+      ctx.save();
+      ctx.globalAlpha = this._a;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+      ctx.fillStyle = this.color;
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  function drawLines(){
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const p=particles[i], q=particles[j];
+        const dx=p.x-q.x, dy=p.y-q.y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<90){
+          ctx.save();
+          ctx.globalAlpha = (1-d/90)*0.09;
+          ctx.strokeStyle = p.color;
+          ctx.lineWidth   = 0.6;
+          ctx.beginPath();
+          ctx.moveTo(p.x,p.y);
+          ctx.lineTo(q.x,q.y);
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+    }
+  }
+
+  function init(){
+    resize();
+    particles = Array.from({length:COUNT}, ()=>new Particle());
+    loop();
+  }
+
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    drawLines();
+    particles.forEach(p=>{p.update();p.draw();});
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', resize);
+  canvas.addEventListener('mousemove', e=>{
+    const r = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - r.left;
+    mouse.y = e.clientY - r.top;
+  });
+  canvas.addEventListener('mouseleave', ()=>{mouse.x=-9999;mouse.y=-9999;});
+
+  /* wait for layout */
+  window.addEventListener('load', init);
+  setTimeout(init, 50);
+})();
+
+/* ═══════════════ STORE LOGIC ═══════════════ */
+const products=[
+  {id:1,e:'&#128241;',brand:'Apple',name:'iPhone 15 Pro Max',price:'$1,099',old:'$1,199',save:'8%',rating:'&#9733;&#9733;&#9733;&#9733;&#9733;',cnt:'2,481',badge:'new',cat:'Smartphones'},
+  {id:2,e:'&#128187;',brand:'Apple',name:'MacBook Pro M3 14"',price:'$1,599',old:'$1,799',save:'11%',rating:'&#9733;&#9733;&#9733;&#9733;&#9733;',cnt:'1,230',badge:'hot',cat:'Laptops'},
+  {id:3,e:'&#127911;',brand:'Sony',name:'WH-1000XM5',price:'$299',old:'$349',save:'14%',rating:'&#9733;&#9733;&#9733;&#9733;&#9734;',cnt:'876',badge:'sale',cat:'Headphones'},
+  {id:4,e:'&#128187;',brand:'ASUS',name:'ROG Swift 4K 240Hz',price:'$579',old:'$649',save:'11%',rating:'&#9733;&#9733;&#9733;&#9733;&#9733;',cnt:'452',badge:'new',cat:'Monitors'},
+  {id:5,e:'&#128241;',brand:'Samsung',name:'Galaxy S24 Ultra',price:'$899',old:'$999',save:'10%',rating:'&#9733;&#9733;&#9733;&#9733;&#9734;',cnt:'1,567',badge:'',cat:'Smartphones'},
+  {id:6,e:'&#127918;',brand:'PlayStation',name:'PS5 Digital Edition',price:'$449',old:'$499',save:'10%',rating:'&#9733;&#9733;&#9733;&#9733;&#9733;',cnt:'2,103',badge:'hot',cat:'Gaming'},
+  {id:7,e:'&#128187;',brand:'Dell',name:'XPS 15 OLED RTX 4060',price:'$1,299',old:'$1,499',save:'13%',rating:'&#9733;&#9733;&#9733;&#9733;&#9734;',cnt:'341',badge:'',cat:'Laptops'},
+  {id:8,e:'&#8987;',brand:'Apple',name:'Watch Ultra 2',price:'$799',old:'$849',save:'6%',rating:'&#9733;&#9733;&#9733;&#9733;&#9733;',cnt:'678',badge:'new',cat:'Wearables'},
+  {id:9,e:'&#127911;',brand:'Bose',name:'QuietComfort Ultra 45',price:'$249',old:'$329',save:'24%',rating:'&#9733;&#9733;&#9733;&#9733;&#9734;',cnt:'542',badge:'sale',cat:'Headphones'},
+  {id:10,e:'&#128187;',brand:'LG',name:'UltraWide 34" 5K2K',price:'$699',old:'$799',save:'13%',rating:'&#9733;&#9733;&#9733;&#9733;&#9734;',cnt:'287',badge:'',cat:'Monitors'},
+  {id:11,e:'&#128241;',brand:'Google',name:'Pixel 9 Pro XL',price:'$749',old:'$849',save:'12%',rating:'&#9733;&#9733;&#9733;&#9733;&#9733;',cnt:'713',badge:'new',cat:'Smartphones'},
+  {id:12,e:'&#127918;',brand:'Xbox',name:'Series X 1TB Bundle',price:'$499',old:'$549',save:'9%',rating:'&#9733;&#9733;&#9733;&#9733;&#9734;',cnt:'1,428',badge:'',cat:'Gaming'},
+];
+let cartCount=0,currentFilter='All',currentPage=1;const PER=8;
+function getFiltered(){return currentFilter==='All'?products:products.filter(p=>p.cat===currentFilter);}
+function renderProducts(){
+  const grid=document.getElementById('productsGrid'),f=getFiltered(),start=(currentPage-1)*PER,s=f.slice(start,start+PER);
+  grid.innerHTML=s.map(p=>`<div class="pc">
+    <div class="pimg"><span>${p.e}</span>
+      ${p.badge?`<span class="pbadge ${p.badge==='new'?'bn':p.badge==='sale'?'bs':'bh'}">${p.badge==='new'?'New':p.badge==='sale'?'Sale':'Hot'}</span>`:''}
+      <div class="pwl" onclick="showToast('&#10084;&#65039;','Saved','${p.name} added to wishlist')">&#9825;</div>
+    </div>
+    <div class="pinfo">
+      <div class="pbrand">${p.brand}</div><div class="pname">${p.name}</div>
+      <div class="prat"><span class="stars">${p.rating}</span><span class="rcnt">(${p.cnt})</span></div>
+      <div class="pprice"><span class="pcur">${p.price}</span><span class="pold">${p.old}</span><span class="psave">&#8595;${p.save}</span></div>
+      <div class="pact">
+        <button class="badd" onclick="addToCart('${p.name}')">&#128722; Add to cart</button>
+        <button class="bqv" onclick="showToast('&#128065;&#65039;','Quick view','${p.name}')">View</button>
+      </div>
+    </div></div>`).join('');
+}
+function renderPagination(){
+  const total=Math.ceil(getFiltered().length/PER),pag=document.getElementById('pagination');
+  if(total<=1){pag.innerHTML='';return;}
+  let html=`<button class="pb" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>&#8592;</button>`;
+  const pages=[];for(let i=1;i<=total;i++){if(i===1||i===total||Math.abs(i-currentPage)<=1)pages.push(i);}
+  let prev=null;
+  pages.forEach(p=>{if(prev&&p-prev>1)html+=`<span class="pelp">&#8230;</span>`;html+=`<button class="pb ${p===currentPage?'act':''}" onclick="goPage(${p})">${p}</button>`;prev=p;});
+  html+=`<button class="pb" onclick="goPage(${currentPage+1})" ${currentPage===total?'disabled':''}>&#8594;</button>`;
+  pag.innerHTML=html;
+}
+function goPage(p){const t=Math.ceil(getFiltered().length/PER);if(p<1||p>t)return;currentPage=p;renderProducts();renderPagination();document.getElementById('products').scrollIntoView({behavior:'smooth'});}
+function filterProducts(cat){currentFilter=cat;currentPage=1;renderProducts();renderPagination();document.getElementById('products').scrollIntoView({behavior:'smooth'});}
+function addToCart(name){cartCount++;document.getElementById('cartBadge').textContent=cartCount;showToast('&#128722;','Added!',name+' is in your cart');}
+function showToast(icon,title,sub){const c=document.getElementById('toastContainer'),t=document.createElement('div');t.className='toast';t.innerHTML=`<span class="ticon">${icon}</span><div><div class="ttitle">${title}</div><div class="tsub">${sub}</div></div>`;c.appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300);},2800);}
+function switchTab(el,filter){document.querySelectorAll('.ft').forEach(t=>t.classList.remove('active'));el.classList.add('active');moveLimelight(el);filterProducts(filter);}
+function moveLimelight(el){const nav=document.getElementById('filterNav'),ind=document.getElementById('limelightInd'),nr=nav.getBoundingClientRect(),er=el.getBoundingClientRect(),cx=er.left-nr.left+er.width/2;ind.style.width='44px';ind.style.left=(cx-22)+'px';}
+document.getElementById('searchInput').addEventListener('input',function(){document.getElementById('searchIcon').textContent=this.value.length>0?'&#9993;':'&#128269;';});
+renderProducts();renderPagination();
+setTimeout(()=>{const a=document.querySelector('.ft.active');if(a)moveLimelight(a);},80);
+</script>
+</body>
+</html>
